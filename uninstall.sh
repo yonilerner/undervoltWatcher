@@ -10,5 +10,7 @@ systemctl disable undervoltWatch.service
 
 rm /usr/bin/undervoltWatch
 rm /etc/systemd/system/undervoltWatch.service
+rm /etc/systemd/system/undervoltWatch.service.d/env.conf
+rmdir /etc/systemd/system/undervoltWatch.service.d
 echo Uninstalled.
 

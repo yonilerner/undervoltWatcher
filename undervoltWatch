@@ -2,8 +2,13 @@
 
 echo $BASHPID > /var/run/undervoltWatch.pid
 
-killall -q undervoltWatch
-while pgrep -u $UID -x undervoltWatch >/dev/null; do sleep 1; done
+#killall -q undervoltWatch
+#while pgrep -u $UID -x undervoltWatch >/dev/null; do sleep 1; done
+
+echo "IGNORE_DEFAULTS=$IGNORE_DEFAULTS"
+echo "iCoreOffset=$iCoreOffset"
+echo "iGpuOffset=$iGpuOffset"
+echo "iTargetTemp=$iTargetTemp"
 
 # Change these values to desired offsets
 if [ -z ${IGNORE_DEFAULTS+x} ]; then
@@ -18,6 +23,10 @@ if [ -z ${IGNORE_DEFAULTS+x} ]; then
 	fi
 fi
 
+echo "iCoreOffset=$iCoreOffset"
+echo "iGpuOffset=$iGpuOffset"
+echo "iTargetTemp=$iTargetTemp"
+
 if [ ${iCoreOffset+x} ]; then
 	iCoreOffsetOpt="--core $iCoreOffset --cache $iCoreOffset"
 fi
@@ -27,6 +36,8 @@ fi
 if [ ${iTargetTemp+x} ]; then
 	iTargetTempOpt="--temp $iTargetTemp"
 fi
+
+echo "Command: undervolt $iCoreOffsetOpt $iGpuOffsetOpt $iTargetTempOpt"
 
 while true
 do

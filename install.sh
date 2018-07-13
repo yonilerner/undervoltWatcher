@@ -8,5 +8,10 @@ fi
 cp undervoltWatch /usr/bin/
 chmod +x /usr/bin/undervoltWatch
 cp undervoltWatch.service /etc/systemd/system/
+mkdir /etc/systemd/system/undervoltWatch.service.d
+echo "[Service]
+Environment='IGNORE_DEFAULTS=1'
+Environment='iCoreOffset=-125'
+" > /etc/systemd/system/undervoltWatch.service.d/env.conf
 systemctl enable undervoltWatch.service
 echo Installed. Use systemctl start undervoltWatch.service to start
