@@ -6,17 +6,34 @@ killall -q undervoltWatch
 while pgrep -u $UID -x undervoltWatch >/dev/null; do sleep 1; done
 
 # Change these values to desired offsets
+if [ -z ${IGNORE_DEFAULTS+x} ]; then
+	if [ -z ${iCoreOffset+x} ]; then
+		iCoreOffset=-110
+	fi
+	if [ -z ${iGpuOffset+x} ]; then
+		iGpuOffset=-75
+	fi
+	if [ -z ${iTargetTemp+x} ]; then
+		iTargetTemp=70
+	fi
+fi
 
-iCoreOffset=-110 # value used for core and cache as they should be the same
-iGpuOffset=-75
-iTargetTemp=70
+if [ ${iCoreOffset+x} ]; then
+	iCoreOffsetOpt="--core $iCoreOffset --cache $iCoreOffset"
+fi
+if [ ${iGpuOffset+x} ]; then
+	iGpuOffsetOpt="--gpu $iGpuOffset"
+fi
+if [ ${iTargetTemp+x} ]; then
+	iTargetTempOpt="--temp $iTargetTemp"
+fi
 
 while true
 do
 	sCurrentCoreOffset=$(undervolt -r | grep -m 1 core: )
 	if [ "$sCurrentCoreOffset" == "core: 0.0 mV" ]; then
 		echo UV not applied. Applying now...
-		undervolt --core $iCoreOffset --cache $iCoreOffset --gpu $iGpuOffset --temp $iTargetTemp
+		undervolt $iCoreOffsetOpt $iGpuOffsetOpt $iTargetTempOpt
 		sCurrentCoreOffset=$(undervolt -r | grep -m 1 core: )
 		if [ "$sCurrentCoreOffset" == "core: 0.0 mV" ]; then
 			echo UV failed to apply.
